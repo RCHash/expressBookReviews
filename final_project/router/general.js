@@ -22,17 +22,31 @@ public_users.post("/register", (req,res) => {
 });
 
 // Get the book list available in the shop
-public_users.get('/',function (req, res) {
-  // send a JSON string with the books
-  res.send(JSON.stringify(books));
+public_users.get('/',async function (req, res) {
+    try {
+        // try to get the info on the books
+        const allBooks=await books;
+        // send a JSON string with the books
+        res.send(JSON.stringify(books));
+    } catch (e) {
+        // send a failure message
+        res.status(500).send("Internal server error");
+    }
 });
 
 // Get book details based on ISBN
-public_users.get('/isbn/:isbn',function (req, res) {
+public_users.get('/isbn/:isbn',async function (req, res) {
     // get the ISBN
     const isbn=req.params.isbn;
-    // filter for that isbn and send it
-    res.send(JSON.stringify(books[isbn]));
+    try {
+        // filter for that isbn
+        const specificBook=books[isbn];
+        // send the information on the book
+        res.send(JSON.stringify(specificBook));
+    } catch (e) {
+        // send a failure message
+        res.status(500).send("Internal server error");
+    }
  });
   
 // Get book details based on author
