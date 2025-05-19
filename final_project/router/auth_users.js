@@ -48,6 +48,21 @@ regd_users.post("/login", (req,res) => {
 
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
+  // get the isbn from the request
+  const isbn=req.params.isbn;
+  // get the data from the request body
+  const review=req.body.review;
+  // get the username
+  const username=req.session.authorization.username;
+  // check whether there's such isbn
+  if (books[isbn]) {
+    // add the user's review
+    book[isbn].reviews[username]=review;
+  //otherwise
+  } else {
+    // send a failure message
+    return res.status(404).json({message: "ISBN not found"});
+  }
   //Write your code here
   return res.status(300).json({message: "Yet to be implemented"});
 });
