@@ -50,30 +50,37 @@ public_users.get('/isbn/:isbn',async function (req, res) {
  });
   
 // Get book details based on author
-public_users.get('/author/:author',function (req, res) {
+public_users.get('/author/:author',async function (req, res) {
     // get the author from the request
     const author=req.params.author;
     // initialize the found marker
     let marker=false;
     // initialize the aBooks array
     let aBooks=[];
-    // map the book entries
-    for (let [key, value] of Object.entries(books)) {
-        // if the book entry matches the 
-        if (books[key].author===author) {
-            // reset the marker
-            marker=true;
-            // append to the aBooks array
-            aBooks.push(books[key]);
+    try {
+        // try to get the data on books
+        const allBooks=await books;
+        // map the book entries
+        for (let [key, value] of Object.entries(allBooks)) {
+            // if the book entry matches the 
+            if (allBooks[key].author===author) {
+                // reset the marker
+                marker=true;
+                // append to the aBooks array
+                aBooks.push(books[key]);
+            }
+        };
+        // if the author was found
+        if (marker) {
+            // send the books info
+            res.send(JSON.stringify(aBooks));
+        } else {
+            // send failure response
+            return res.status(404).json({message: "Author not found"});
         }
-    };
-    // if the author was found
-    if (marker) {
-        // send the books info
-        res.send(JSON.stringify(aBooks));
-    } else {
-        // send failure response
-        return res.status(404).json({message: "Author not found"});
+    } catch (e) {
+        // send a failure message
+        res.status(500).send("Internal server error");
     }
 });
 
