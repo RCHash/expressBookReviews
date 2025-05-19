@@ -57,7 +57,7 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
   // check whether there's such isbn
   if (books[isbn]) {
     // add the user's review
-    book[isbn].reviews[username]=review;
+    books[isbn].reviews[username]=review;
   //otherwise
   } else {
     // send a failure message
