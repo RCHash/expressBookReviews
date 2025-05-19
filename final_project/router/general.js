@@ -36,15 +36,15 @@ public_users.get('/',function (req, res) {
 public_users.get('/isbn/:isbn',async function (req, res) {
     // get the ISBN
     const isbn=req.params.isbn;
-    try {
+    // create a promise to fetch book information
+    const get_book=new Promise((resolve, reject) => {
         // filter for that isbn
         const specificBook=books[isbn];
         // send the information on the book
         res.send(JSON.stringify(specificBook));
-    } catch (e) {
-        // send a failure message
-        res.status(500).send("Internal server error");
-    }
+    });
+    // use the promise to get information on the book
+    get_book;
  });
   
 // Get book details based on author
