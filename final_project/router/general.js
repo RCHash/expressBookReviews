@@ -24,10 +24,10 @@ public_users.post("/register", (req,res) => {
 // Get the book list available in the shop
 public_users.get('/',async function (req, res) {
     try {
-        // try to get the info on the books
+        // try to get the data on books
         const allBooks=await books;
         // send a JSON string with the books
-        res.send(JSON.stringify(books));
+        res.send(JSON.stringify(allBooks));
     } catch (e) {
         // send a failure message
         res.status(500).send("Internal server error");
@@ -39,12 +39,11 @@ public_users.get('/isbn/:isbn',async function (req, res) {
     // get the ISBN
     const isbn=req.params.isbn;
     try {
-        // filter for that isbn
-        const specificBook=books[isbn];
-        // send the information on the book
-        res.send(JSON.stringify(specificBook));
+        // try to get the data on books
+        const allBooks=books;
+        // send it
+        res.send(JSON.stringify(allBooks[isbn]));
     } catch (e) {
-        // send a failure message
         res.status(500).send("Internal server error");
     }
  });
