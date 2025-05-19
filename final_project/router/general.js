@@ -6,8 +6,19 @@ const public_users = express.Router();
 
 
 public_users.post("/register", (req,res) => {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+    // get the username and password
+    const username=req.body.username;
+    const password=req.body.password;
+    // check whether both were provided
+    if (username && password) {
+        // add to the users array
+        users.push({"username":username, "password":password});
+        // send successful response
+        return res.status(200).json({message: "User "+username+" registered successfully"});
+    } else {
+        // send failure response
+        return res.status(400).json({message: "Bad request"});
+    }
 });
 
 // Get the book list available in the shop
@@ -47,7 +58,7 @@ public_users.get('/author/:author',function (req, res) {
         // send the books info
         res.send(JSON.stringify(aBooks));
     } else {
-        //Write your code here
+        // send failure response
         return res.status(404).json({message: "Author not found"});
     }
 });
@@ -75,15 +86,17 @@ public_users.get('/title/:title',function (req, res) {
         // send the books info
         res.send(JSON.stringify(aBooks));
     } else {
-        //Write your code here
+        // send failure response
         return res.status(404).json({message: "Title not found"});
     }
 });
 
 //  Get book review
 public_users.get('/review/:isbn',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+    // get the isbn from the request
+    const isbn=req.params.isbn;
+    // filter for that isbn and send the reviews
+    res.send(JSON.stringify(books[isbn].reviews));
 });
 
 module.exports.general = public_users;
