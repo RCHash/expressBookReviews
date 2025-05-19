@@ -33,7 +33,7 @@ public_users.get('/',function (req, res) {
 });
 
 // Get book details based on ISBN
-public_users.get('/isbn/:isbn',async function (req, res) {
+public_users.get('/isbn/:isbn',function (req, res) {
     // get the ISBN
     const isbn=req.params.isbn;
     // create a promise to fetch book information
@@ -48,20 +48,19 @@ public_users.get('/isbn/:isbn',async function (req, res) {
  });
   
 // Get book details based on author
-public_users.get('/author/:author',async function (req, res) {
+public_users.get('/author/:author',function (req, res) {
     // get the author from the request
     const author=req.params.author;
-    // initialize the found marker
-    let marker=false;
-    // initialize the aBooks array
-    let aBooks=[];
-    try {
-        // try to get the data on books
-        const allBooks=await books;
+    // create a promise to get the books information
+    const get_books=new Promise((resolve, reject) => {
+        // initialize the found marker
+        let marker=false;
+        // initialize the aBooks array
+        let aBooks=[];
         // map the book entries
-        for (let [key, value] of Object.entries(allBooks)) {
+        for (let [key, value] of Object.entries(books)) {
             // if the book entry matches the 
-            if (allBooks[key].author===author) {
+            if (books[key].author===author) {
                 // reset the marker
                 marker=true;
                 // append to the aBooks array
@@ -76,10 +75,9 @@ public_users.get('/author/:author',async function (req, res) {
             // send failure response
             return res.status(404).json({message: "Author not found"});
         }
-    } catch (e) {
-        // send a failure message
-        res.status(500).send("Internal server error");
-    }
+    });
+    // use the promise to get the books
+    get_books;
 });
 
 // Get all books based on title
