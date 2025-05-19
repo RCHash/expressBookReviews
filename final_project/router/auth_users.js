@@ -6,7 +6,17 @@ const regd_users = express.Router();
 let users = [];
 
 const isValid = (username)=>{ //returns boolean
-//write code to check is the username is valid
+// filter for the username and password
+const foundUser=users.filter((user) => {
+    user.username===username
+});
+// if there was a match
+if (foundUser.length>0) {
+    return true;
+// otherwise
+} else {
+    return false;
+}
 }
 
 const authenticatedUser = (username,password)=>{ //returns boolean
@@ -63,8 +73,6 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
     // send a failure message
     return res.status(404).json({message: "ISBN not found"});
   }
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
 });
 
 module.exports.authenticated = regd_users;
