@@ -41,7 +41,7 @@ public_users.get('/isbn/:isbn',function (req, res) {
         // filter for that isbn
         const specificBook=books[isbn];
         // send the information on the book
-        res.send(JSON.stringify(specificBook));
+        resolve(res.send(JSON.stringify(specificBook)));
     });
     // use the promise to get information on the book
     get_book;
@@ -70,10 +70,10 @@ public_users.get('/author/:author',function (req, res) {
         // if the author was found
         if (marker) {
             // send the books info
-            res.send(JSON.stringify(aBooks));
+            resolve(res.send(JSON.stringify(aBooks)));
         } else {
             // send failure response
-            return res.status(404).json({message: "Author not found"});
+            resolve(res.status(404).send(JSON.stringify({message: "Author not found"})));
         }
     });
     // use the promise to get the books
@@ -84,17 +84,16 @@ public_users.get('/author/:author',function (req, res) {
 public_users.get('/title/:title',async function (req, res) {
     // get the author from the request
     const title=req.params.title;
-    // initialize the found marker
-    let marker=false;
-    // initialize the aBooks array
-    let aBooks=[];
-    try {
-        // try to get the data on books
-        const allBooks=await books;
+    // create a promise to get the books information
+        const get_books=new Promise((resolve, reject) => {
+            // initialize the found marker
+        let marker=false;
+        // initialize the aBooks array
+        let aBooks=[];
         // map the book entries
-        for (let [key, value] of Object.entries(allBooks)) {
+        for (let [key, value] of Object.entries(books)) {
             // if the book entry matches the 
-            if (allBooks[key].title===title) {
+            if (books[key].title===title) {
                 // reset the marker
                 marker=true;
                 // append to the aBooks array
@@ -104,15 +103,14 @@ public_users.get('/title/:title',async function (req, res) {
         // if the title was found
         if (marker) {
             // send the books info
-            res.send(JSON.stringify(aBooks));
+            resolve(res.send(JSON.stringify(aBooks)));
         } else {
             // send failure response
-            return res.status(404).json({message: "Title not found"});
+            resolve(res.status(404).send(JSON.stringify({message: "Title not found"})));
         }
-    } catch (e) {
-        // send a failure message
-        res.status(500).send("Internal server error");
-    }
+    });
+    // use the promise to get the data
+    get_books;
 });
 
 //  Get book review
