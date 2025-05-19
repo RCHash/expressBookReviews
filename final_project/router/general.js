@@ -22,16 +22,14 @@ public_users.post("/register", (req,res) => {
 });
 
 // Get the book list available in the shop
-public_users.get('/',async function (req, res) {
-    try {
-        // try to get the info on the books
-        const allBooks=await books;
-        // send a JSON string with the books
-        res.send(JSON.stringify(books));
-    } catch (e) {
-        // send a failure message
-        res.status(500).send("Internal server error");
-    }
+public_users.get('/',function (req, res) {
+    // create a promise to get the books information
+    const get_books=new Promise((resolve, reject) => {
+        // get the books information
+        resolve(res.send(JSON.stringify(books)));
+    });
+    // use the promise
+    get_books;
 });
 
 // Get book details based on ISBN
